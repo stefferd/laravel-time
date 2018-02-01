@@ -34,8 +34,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Uren registreren</div>
                 <div class="panel-body">
-                    @if editRegistration
-                        <form method="POST" action="/registrations/{{$editRegistration->$id}}">
+                    @if (isset($editRegistration))
+                        <form method="POST" action="/registrations/{{$editRegistration->id}}">
                             {{ method_field('PUT') }}
                     @else
                         <form method="POST" action="/registrations">
@@ -46,7 +46,7 @@
                             <select id="customer_id" class="form-control" onchange="filterProjects(this)" name="customer_id">
                                 <option value="">Selecteer een Klant</option>
                                 @foreach ($customers as $customer)
-                                    <option value="{{$customer->id}}"{{($editRegistration && $editRegistration->customer_id == $custumer->id) ? ' selected' : '' }}>{{$customer->name}}</option>
+                                    <option value="{{$customer->id}}"{{(isset($editRegistration) && $editRegistration->customer_id == $customer->id) ? ' selected' : '' }}>{{$customer->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -55,21 +55,21 @@
                             <select id="project_id" class="form-control" name="project_id">
                                 <option value="">Selecteer een project</option>
                                 @foreach ($projects as $project)
-                                    <option class="belongs-to belongs-to-{{$project->customer->id}}" value="{{$project->id}}">{{$project->name}}</option>
+                                    <option class="belongs-to belongs-to-{{$project->customer->id}}" value="{{$project->id}}"{{(isset($editRegistration) && $editRegistration->project_id == $project->id) ? ' selected' : '' }}>{{$project->name}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="workday">Gemaakt op</label>
-                            <input type="date" id="workday" class="form-control" name="workday" />
+                            <input type="date" id="workday" class="form-control" name="workday" value="{{(isset($editRegistration)) ? $editRegistration->workday : '' }}" />
                         </div>
                         <div class="form-group col-md-6">
                             <label for="amount">Aantal uren</label>
-                            <input type="text" id="amount" class="form-control" name="amount" />
+                            <input type="text" id="amount" class="form-control" name="amount" value="{{(isset($editRegistration)) ? $editRegistration->amount : '' }}" />
                         </div>
                         <div class="form-group col-md-12">
                             <label for="description">Omschrijving</label>
-                            <input type="text" id="description" class="form-control" name="description" />
+                            <input type="text" id="description" class="form-control" name="description" value="{{(isset($editRegistration)) ? $editRegistration->description : '' }}" />
                         </div>
                         <div class="form-group col-md-12">
                             <button type="submit" class="btn btn-primary">Toevoegen</button>

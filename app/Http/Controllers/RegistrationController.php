@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
+use App\Project;
 use App\Registration;
 use Illuminate\Http\Request;
 
@@ -70,7 +72,7 @@ class RegistrationController extends Controller
 	    $customers = Customer::all();
 	    $projects = Project::orderBy('customer_id')->with('customer')->get();
 	    $registrations = Registration::orderBy('workday', 'desc')->with(['project', 'customer'])->get();
-	    $editRegistration = Registration::get($id);
+	    $editRegistration = Registration::find($id);
 	    return view('home', ['customers' => $customers, 'projects' => $projects, 'registrations' => $registrations, 'editRegistration' => $editRegistration]);
     }
 
@@ -83,7 +85,21 @@ class RegistrationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+	    $registration = Registration::find($id);
+	    $this->validate($request, [
+		    'workday'=>'required',
+		    'amount'=> 'required',
+		    'description' => 'required',
+		    'customer_id' => 'required',
+		    'project_id' => 'required'
+	    ]);
+	    $registration->workday = $request->input('workday');
+	    $registration->amount = $request->input('amount');
+	    $registration->description = $request->input('description');
+	    $registration->customer_id = $request->input('customer_id');
+	    $registration->project_id = $request->input('project_id');
+	    $registration->save();
+	    return redirect('/home')->with('success', 'Tijd registratie is aangepast!');
     }
 
     /**

@@ -14,17 +14,32 @@
                         </div>
                     @endif
 
+                    <table class="table">
+                        <tr>
+                            <th>Datum</th>
+                            <th>Project</th>
+                            <th>Uren</th>
+                            <th>Omschrijving</th>
+                        </tr>
                     @foreach($registrations as $registration)
-                        <div>
-                            {{$registration->workday}} - {{$registration->amount}} / <strong>{{$registration->customer->name}} - {{$registration->project->name}}</strong><br />{{$registration->description}}<br />
-                            <form action="{{ action('RegistrationController@destroy', ['id' => $registration->id]) }}" method="POST">
-                                {{ method_field('DELETE') }}
-                                {{ csrf_field() }}
-                                <button>Verwijderen</button>
-                            </form>
-                            <a href="{{ action('RegistrationController@edit', ['id' => $registration->id]) }}">Bewerken</a>
-                        </div>
+                        <tr>
+                            <td>{{$registration->workday}}</td>
+                            <td>{{$registration->customer->name}} - {{$registration->project->name}}</td>
+                            <td>{{$registration->amount}}</td>
+                            <td>{{$registration->description}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <a href="{{ action('RegistrationController@edit', ['id' => $registration->id]) }}">Bewerken</a>&nbsp;&nbsp;&nbsp;
+                                <form action="{{ action('RegistrationController@destroy', ['id' => $registration->id]) }}" method="POST">
+                                    {{ method_field('DELETE') }}
+                                    {{ csrf_field() }}
+                                    <button>Verwijderen</button>
+                                </form>
+                            </td>
+                        </tr>
                     @endforeach
+                    </table>
                 </div>
             </div>
         </div>

@@ -22,6 +22,7 @@
                                 {{ csrf_field() }}
                                 <button>Verwijderen</button>
                             </form>
+                            <a href="{{ action('RegistrationController@edit', ['id' => $registration->id]) }}">Bewerken</a>
                         </div>
                     @endforeach
                 </div>
@@ -33,14 +34,19 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Uren registreren</div>
                 <div class="panel-body">
-                    <form method="POST" action="/registrations">
+                    @if editRegistration
+                        <form method="POST" action="/registrations/{{$editRegistration->$id}}">
+                            {{ method_field('PUT') }}
+                    @else
+                        <form method="POST" action="/registrations">
+                    @endif
                         <input type="hidden" value="{{csrf_token()}}" name="_token" />
                         <div class="form-group col-md-6">
                             <label for="customer_id">Klant</label>
                             <select id="customer_id" class="form-control" onchange="filterProjects(this)" name="customer_id">
                                 <option value="">Selecteer een Klant</option>
                                 @foreach ($customers as $customer)
-                                    <option value="{{$customer->id}}">{{$customer->name}}</option>
+                                    <option value="{{$customer->id}}"{{($editRegistration && $editRegistration->customer_id == $custumer->id) ? ' selected' : '' }}>{{$customer->name}}</option>
                                 @endforeach
                             </select>
                         </div>

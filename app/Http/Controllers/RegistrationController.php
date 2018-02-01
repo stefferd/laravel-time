@@ -67,7 +67,11 @@ class RegistrationController extends Controller
      */
     public function edit($id)
     {
-        //
+	    $customers = Customer::all();
+	    $projects = Project::orderBy('customer_id')->with('customer')->get();
+	    $registrations = Registration::orderBy('workday', 'desc')->with(['project', 'customer'])->get();
+	    $editRegistration = Registration::get($id);
+	    return view('home', ['customers' => $customers, 'projects' => $projects, 'registrations' => $registrations, 'editRegistration' => $editRegistration]);
     }
 
     /**

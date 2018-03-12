@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <div class="panel-heading">Dashboard :: Uren van {{$currentMonth}}</div>
 
                 <div class="panel-body">
                     @if (session('status'))
@@ -21,24 +21,30 @@
                             <th>Uren</th>
                             <th>Omschrijving</th>
                         </tr>
-                    @foreach($registrations as $registration)
-                        <tr>
-                            <td>{{$registration->workday}}</td>
-                            <td>{{$registration->customer->name}} - {{$registration->project->name}}</td>
-                            <td>{{$registration->amount}}</td>
-                            <td>{{$registration->description}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <a href="{{ action('RegistrationController@edit', ['id' => $registration->id]) }}">Bewerken</a>&nbsp;&nbsp;&nbsp;
-                                <form action="{{ action('RegistrationController@destroy', ['id' => $registration->id]) }}" method="POST">
-                                    {{ method_field('DELETE') }}
-                                    {{ csrf_field() }}
-                                    <button>Verwijderen</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
+                    @forelse($registrations as $registration)
+                            <tr>
+                                <td>{{$registration->workday}}</td>
+                                <td>{{$registration->customer->name}} - {{$registration->project->name}}</td>
+                                <td>{{$registration->amount}}</td>
+                                <td>{{$registration->description}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <a href="{{ action('RegistrationController@edit', ['id' => $registration->id]) }}">Bewerken</a>&nbsp;&nbsp;&nbsp;
+                                    <form action="{{ action('RegistrationController@destroy', ['id' => $registration->id]) }}" method="POST">
+                                        {{ method_field('DELETE') }}
+                                        {{ csrf_field() }}
+                                        <button>Verwijderen</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4">
+                                    <p>Nog geen uren geboekt voor deze maand, boek hieronder uw uren!</p>
+                                </td>
+                            </tr>
+                        @endforelse
                     </table>
                 </div>
             </div>

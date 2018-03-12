@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Registration extends Model
 {
@@ -19,6 +20,10 @@ class Registration extends Model
 		$this->project_id = $data['project_id'];
 		$this->save();
 		return 1;
+	}
+
+	public function getWorkdayAttribute($value) {
+		return Carbon::parse($value)->formatLocalized('%d-%m-%Y');
 	}
 
 	public function customer()

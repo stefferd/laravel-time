@@ -24,3 +24,4 @@ Route::resources([
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home/{currentMonth}/{currentYear}', 'HomeController@index')->name('homeMonthSwitched');

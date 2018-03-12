@@ -26,9 +26,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-    	$customers = DB::table('customers')->get();
-    	$projects = Project::orderBy('customer_id')->with('customer')->get();
-    	$registrations = Registration::orderBy('workday', 'desc')->with(['project', 'customer'])->get();
+    	$customers = DB::table('customers')->where('user_id', auth()->user()->id)->get();
+    	$projects = Project::orderBy('customer_id')->with('customer')->where('user_id', auth()->user()->id)->get();
+    	$registrations = Registration::orderBy('workday', 'desc')->with(['project', 'customer'])->where('user_id', auth()->user()->id)->get();
         return view('home', ['customers' => $customers, 'projects' => $projects, 'registrations' => $registrations]);
     }
 }

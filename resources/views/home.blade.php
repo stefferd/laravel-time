@@ -5,7 +5,13 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard :: Uren van {{$currentMonth}}</div>
+                <div class="panel-heading">
+                    <h3>Dashboard :: Uren van {{$currentMonth}} {{$subYear}}</h3>
+                    <div style="float: right; margin-top: -30px;">
+                        <a href="{{url('home', ['currentMonth' => ($subMonth - 1) == 0 ? 12 : ($subMonth - 1), 'currentYear' => ($subMonth - 1) == 0 ? $subYear - 1 : $subYear])}}"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                        <a href="{{url('home', ['currentMonth' => ($subMonth + 1) == 13 ? 1 : ($subMonth + 1), 'currentYear' => ($subMonth + 1) == 13 ? $subYear + 1 : $subYear])}}"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                    </div>
+                </div>
 
                 <div class="panel-body">
                     @if (session('status'))

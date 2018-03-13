@@ -15,7 +15,7 @@
 </head>
 <body>
     <div class="wrapper">
-        <nav id="sidebar" class="active">
+        <nav id="sidebar" @auth class="active" @endauth>
             @yield('sidebarforms')
         </nav>
         <div id="content">

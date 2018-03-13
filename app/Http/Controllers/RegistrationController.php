@@ -6,9 +6,11 @@ use App\Customer;
 use App\Project;
 use App\Registration;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class RegistrationController extends Controller
 {
+	private $currentMonth = null;
     /**
      * Display a listing of the resource.
      *
@@ -69,11 +71,18 @@ class RegistrationController extends Controller
      */
     public function edit($id)
     {
+	    $subMonth = Carbon::now()->month;
+	    $subYear = Carbon::now()->year;
+	    $this->getCurrentMonth($subMonth, $subYear);
+	    $thisMonthRange = $this->getCurrentRange();
+	    $currentMonthLabel = $this->currentMonth->formatLocalized('%B');
 	    $customers = Customer::all();
 	    $projects = Project::orderBy('customer_id')->with('customer')->get();
 	    $registrations = Registration::orderBy('workday', 'desc')->with(['project', 'customer'])->get();
 	    $editRegistration = Registration::find($id);
-	    return view('home', ['customers' => $customers, 'projects' => $projects, 'registrations' => $registrations, 'editRegistration' => $editRegistration]);
+	    return view('home', ['customers' => $customers, 'projects' => $projects, 'registrations' => $registrations, 'editRegistration' => $editRegistration,'currentMonth' => $currentMonthLabel,
+	                         'subMonth' => $subMonth,
+	                         'subYear' => $subYear]);
     }
 
     /**
@@ -113,4 +122,24 @@ class RegistrationController extends Controller
         Registration::destroy($id);
 	    return redirect('/home')->with('success', 'Tijd registratie is verwijderd!');
     }
+
+	private function getCurrentRange() {
+		$endOfMonth = Carbon::parse($this->currentMonth)->endOfMonth();
+		$beginOfMonth = Carbon::parse($this->currentMonth)->startOfMonth();
+
+		return [
+			$beginOfMonth,
+			$endOfMonth
+		];
+	}
+
+	private function getCurrentMonth($subMonth, $subYear) {
+		$this->currentMonth = Carbon::now();
+		if ($subMonth != null) {
+			$this->currentMonth->month(intval($subMonth));
+		}
+		if ($subYear != null) {
+			$this->currentMonth->year(intval($subYear));
+		}
+	}
 }

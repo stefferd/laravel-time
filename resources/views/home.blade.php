@@ -159,6 +159,8 @@
                             <th>Project</th>
                             <th>Uren</th>
                             <th>Omschrijving</th>
+                            <th><span class="glyphicon glyphicon-edit"></span></th>
+                            <th><span class="glyphicon glyphicon-trash"></span></th>
                         </tr>
                     @forelse($registrations as $registration)
                             <tr>
@@ -166,20 +168,20 @@
                                 <td>{{$registration->customer->name}} - {{$registration->project->name}}</td>
                                 <td>{{$registration->amount}}</td>
                                 <td>{{$registration->description}}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">
-                                    <a href="{{ action('RegistrationController@edit', ['id' => $registration->id]) }}">Bewerken</a>&nbsp;&nbsp;&nbsp;
+                                <td>
+                                    <a href="{{ action('RegistrationController@edit', ['id' => $registration->id]) }}"><span class="glyphicon glyphicon-edit"></span></a>
+                                </td>
+                                <td>
                                     <form action="{{ action('RegistrationController@destroy', ['id' => $registration->id]) }}" method="POST">
                                         {{ method_field('DELETE') }}
                                         {{ csrf_field() }}
-                                        <button>Verwijderen</button>
+                                        <button><span class="glyphicon glyphicon-trash"></span></button>
                                     </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4">
+                                <td colspan="6">
                                     <p>Nog geen uren geboekt voor deze maand, boek hieronder uw uren!</p>
                                 </td>
                             </tr>

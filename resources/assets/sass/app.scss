@@ -7,3 +7,48 @@
 
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+.wrapper {
+  display: flex;
+  align-items: stretch;
+}
+#content {
+  padding: 0;
+  min-height: 100vh;
+  transition: all 0.3s;
+  width: 100vw;
+}
+
+#sidebar {
+  min-width: 350px;
+  max-width: 350px;
+  background: #999;
+  color: #fff;
+  margin-left: -350px;
+  transition: all 0.3s;
+}
+
+#sidebar.active {
+  margin-left: 0;
+}
+
+#sidebar .sidebar-header {
+  padding: 10px;
+  background: #6d7fcc;
+}
+#sidebar .sidebar-body {
+  padding: 10px;
+}
+#sidebar ul.components {
+  padding: 20px 0;
+  border-bottom: 1px solid #47748b;
+}
+
+.panel-default {
+  background-color: rgba(255,255,255, 0.2);
+
+  & > .panel-heading + .panel-collapse > .panel-body {
+    background-color: rgba(255,255,255, 0.2);
+  }
+}
+

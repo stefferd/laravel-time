@@ -1,5 +1,129 @@
 @extends('layouts.app')
 
+@section('sidebarforms')
+    <div class="sidebar-body">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Uren registreren
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        @if (isset($editRegistration))
+                            <form method="POST" action="/registrations/{{$editRegistration->id}}">
+                                {{ method_field('PUT') }}
+                        @else
+                            <form method="POST" action="/registrations">
+                        @endif
+                            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                            <div class="form-group">
+                                <label for="customer_id">Klant</label>
+                                <select id="customer_id" class="form-control" onchange="filterProjects(this)" name="customer_id">
+                                    <option value="">Selecteer een Klant</option>
+                                    @foreach ($customers as $customer)
+                                        <option value="{{$customer->id}}"{{(isset($editRegistration) && $editRegistration->customer_id == $customer->id) ? ' selected' : '' }}>{{$customer->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="project_id">Project</label>
+                                <select id="project_id" class="form-control" name="project_id">
+                                    <option value="">Selecteer een project</option>
+                                    @foreach ($projects as $project)
+                                        <option class="belongs-to belongs-to-{{$project->customer->id}}" value="{{$project->id}}"{{(isset($editRegistration) && $editRegistration->project_id == $project->id) ? ' selected' : '' }}>{{$project->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="workday">Gemaakt op</label>
+                                <input type="date" id="workday" class="form-control" name="workday" value="{{(isset($editRegistration)) ? $editRegistration->workday : '' }}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="amount">Aantal uren</label>
+                                <input type="text" id="amount" class="form-control" name="amount" value="{{(isset($editRegistration)) ? $editRegistration->amount : '' }}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Omschrijving</label>
+                                <input type="text" id="description" class="form-control" name="description" value="{{(isset($editRegistration)) ? $editRegistration->description : '' }}" />
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Toevoegen</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            Project toevoegen
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body">
+                        <form method="POST" action="/projects">
+                            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                            <div class="form-group">
+                                <label for="name">Naam</label>
+                                <input type="text" id="name" class="form-control" name="name" />
+                            </div>
+                            <div class="form-group">
+                                <label for="customer_id">Klant</label>
+                                <select id="customer_id" class="form-control" name="customer_id">
+                                    <option value="">Selecteer een Klant</option>
+                                    @foreach ($customers as $customer)
+                                        <option value="{{$customer->id}}">{{$customer->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Toevoegen</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="panel-heading" role="tab" id="headingThree">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                            Klant toevoegen
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                    <div class="panel-body">
+                        <form method="POST" action="/customers">
+                            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                            <div class="form-group">
+                                <label for="name">Naam</label>
+                                <input type="text" id="name" class="form-control" name="name" />
+                            </div>
+                            <div class="form-group">
+                                <label for="contact">Contactpersoon</label>
+                                <input type="text" id="contact" class="form-control" name="contact" />
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email contactpersoon</label>
+                                <input type="email" id="email" class="form-control" name="email" />
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Telefoon contactpersoon</label>
+                                <input type="text" id="phone" class="form-control" name="phone" />
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Toevoegen</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">
@@ -52,113 +176,10 @@
                             </tr>
                         @endforelse
                     </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">Uren registreren</div>
-                <div class="panel-body">
-                    @if (isset($editRegistration))
-                        <form method="POST" action="/registrations/{{$editRegistration->id}}">
-                            {{ method_field('PUT') }}
-                    @else
-                        <form method="POST" action="/registrations">
-                    @endif
-                        <input type="hidden" value="{{csrf_token()}}" name="_token" />
-                        <div class="form-group col-md-6">
-                            <label for="customer_id">Klant</label>
-                            <select id="customer_id" class="form-control" onchange="filterProjects(this)" name="customer_id">
-                                <option value="">Selecteer een Klant</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{$customer->id}}"{{(isset($editRegistration) && $editRegistration->customer_id == $customer->id) ? ' selected' : '' }}>{{$customer->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="project_id">Project</label>
-                            <select id="project_id" class="form-control" name="project_id">
-                                <option value="">Selecteer een project</option>
-                                @foreach ($projects as $project)
-                                    <option class="belongs-to belongs-to-{{$project->customer->id}}" value="{{$project->id}}"{{(isset($editRegistration) && $editRegistration->project_id == $project->id) ? ' selected' : '' }}>{{$project->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="workday">Gemaakt op</label>
-                            <input type="date" id="workday" class="form-control" name="workday" value="{{(isset($editRegistration)) ? $editRegistration->workday : '' }}" />
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="amount">Aantal uren</label>
-                            <input type="text" id="amount" class="form-control" name="amount" value="{{(isset($editRegistration)) ? $editRegistration->amount : '' }}" />
-                        </div>
-                        <div class="form-group col-md-12">
-                            <label for="description">Omschrijving</label>
-                            <input type="text" id="description" class="form-control" name="description" value="{{(isset($editRegistration)) ? $editRegistration->description : '' }}" />
-                        </div>
-                        <div class="form-group col-md-12">
-                            <button type="submit" class="btn btn-primary">Toevoegen</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">Project toevoegen</div>
-                <div class="panel-body">
-                    <form method="POST" action="/projects">
-                        <input type="hidden" value="{{csrf_token()}}" name="_token" />
-                        <div class="form-group col-md-6">
-                            <label for="name">Naam</label>
-                            <input type="text" id="name" class="form-control" name="name" />
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="customer_id">Klant</label>
-                            <select id="customer_id" class="form-control" name="customer_id">
-                                <option value="">Selecteer een Klant</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{$customer->id}}">{{$customer->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <button type="submit" class="btn btn-primary">Toevoegen</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">Klant toevoegen</div>
-                <div class="panel-body">
-                    <form method="POST" action="/customers">
-                        <input type="hidden" value="{{csrf_token()}}" name="_token" />
-                        <div class="form-group col-md-6">
-                            <label for="name">Naam</label>
-                            <input type="text" id="name" class="form-control" name="name" />
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="contact">Contactpersoon</label>
-                            <input type="text" id="contact" class="form-control" name="contact" />
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="email">Email contactpersoon</label>
-                            <input type="email" id="email" class="form-control" name="email" />
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="phone">Telefoon contactpersoon</label>
-                            <input type="text" id="phone" class="form-control" name="phone" />
-                        </div>
-                        <div class="form-group col-md-12">
-                            <button type="submit" class="btn btn-primary">Toevoegen</button>
-                        </div>
-                    </form>
+                    <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                        <i class="glyphicon glyphicon-align-left"></i>
+                        Toggle Sidebar
+                    </button>
                 </div>
             </div>
         </div>

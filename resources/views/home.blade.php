@@ -13,47 +13,52 @@
                 </div>
                 <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                     <div class="panel-body">
-                        @if (isset($editRegistration))
-                            <form method="POST" action="/registrations/{{$editRegistration->id}}">
-                                {{ method_field('PUT') }}
+                        @if (count($customers) == 0 || count($projects) == 0)
+                            <p>Voordat je uren kan boeken, moeten er een klant toevoegd wordenen een project aangekoppeld worden.</p>
+                            <p>Dit kan je hieronder doen door de klikken op "Klant toevoegen" & "Project toevoegen".</p>
                         @else
-                            <form method="POST" action="/registrations">
+                            @if (isset($editRegistration))
+                                <form method="POST" action="/registrations/{{$editRegistration->id}}">
+                                    {{ method_field('PUT') }}
+                            @else
+                                <form method="POST" action="/registrations">
+                            @endif
+                                <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                                <div class="form-group">
+                                    <label for="customer_id">Klant</label>
+                                    <select id="customer_id" class="form-control" onchange="filterProjects(this)" name="customer_id">
+                                        <option value="">Selecteer een Klant</option>
+                                        @foreach ($customers as $customer)
+                                            <option value="{{$customer->id}}"{{(isset($editRegistration) && $editRegistration->customer_id == $customer->id) ? ' selected' : '' }}>{{$customer->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="project_id">Project</label>
+                                    <select id="project_id" class="form-control" name="project_id">
+                                        <option value="">Selecteer een project</option>
+                                        @foreach ($projects as $project)
+                                            <option class="belongs-to belongs-to-{{$project->customer->id}}" value="{{$project->id}}"{{(isset($editRegistration) && $editRegistration->project_id == $project->id) ? ' selected' : '' }}>{{$project->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="workday">Gemaakt op</label>
+                                    <input type="date" id="workday" class="form-control" name="workday" value="{{(isset($editRegistration)) ? $editRegistration->workday : '' }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="amount">Aantal uren</label>
+                                    <input type="text" id="amount" class="form-control" name="amount" value="{{(isset($editRegistration)) ? $editRegistration->amount : '' }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Omschrijving</label>
+                                    <input type="text" id="description" class="form-control" name="description" value="{{(isset($editRegistration)) ? $editRegistration->description : '' }}" />
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Toevoegen</button>
+                                </div>
+                            </form>
                         @endif
-                            <input type="hidden" value="{{csrf_token()}}" name="_token" />
-                            <div class="form-group">
-                                <label for="customer_id">Klant</label>
-                                <select id="customer_id" class="form-control" onchange="filterProjects(this)" name="customer_id">
-                                    <option value="">Selecteer een Klant</option>
-                                    @foreach ($customers as $customer)
-                                        <option value="{{$customer->id}}"{{(isset($editRegistration) && $editRegistration->customer_id == $customer->id) ? ' selected' : '' }}>{{$customer->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="project_id">Project</label>
-                                <select id="project_id" class="form-control" name="project_id">
-                                    <option value="">Selecteer een project</option>
-                                    @foreach ($projects as $project)
-                                        <option class="belongs-to belongs-to-{{$project->customer->id}}" value="{{$project->id}}"{{(isset($editRegistration) && $editRegistration->project_id == $project->id) ? ' selected' : '' }}>{{$project->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="workday">Gemaakt op</label>
-                                <input type="date" id="workday" class="form-control" name="workday" value="{{(isset($editRegistration)) ? $editRegistration->workday : '' }}" />
-                            </div>
-                            <div class="form-group">
-                                <label for="amount">Aantal uren</label>
-                                <input type="text" id="amount" class="form-control" name="amount" value="{{(isset($editRegistration)) ? $editRegistration->amount : '' }}" />
-                            </div>
-                            <div class="form-group">
-                                <label for="description">Omschrijving</label>
-                                <input type="text" id="description" class="form-control" name="description" value="{{(isset($editRegistration)) ? $editRegistration->description : '' }}" />
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Toevoegen</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
                 <div class="panel-heading" role="tab" id="headingTwo">
@@ -121,6 +126,10 @@
                 </div>
             </div>
         </div>
+        @if (count($customers) == 0 || count($projects) == 0)
+            <p>Voordat je uren kan boeken, moeten er een klant toevoegd wordenen een project aangekoppeld worden.</p>
+            <p>Dit kan je hieronder doen door de klikken op "Klant toevoegen" & "Project toevoegen".</p>
+        @endif
     </div>
 @endsection
 
